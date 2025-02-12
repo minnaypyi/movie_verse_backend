@@ -22,6 +22,6 @@ jobs:
       - name: Deploy to AWS CodeDeploy
         uses: aws-actions/aws-codedeploy-deploy@v1
         with:
-          application-name: MyApp
-          deployment-group-name: MyApp-Deployment
+          application-name: movieverse
+          deployment-group-name: movieverse_deployment
           github-token: ${{ secrets.GITHUB_TOKEN }}
