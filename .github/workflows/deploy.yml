@@ -17,11 +17,12 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1  # Change to your region
+          aws-region: ap-southeast-1  # Change to your region
 
       - name: Deploy to AWS CodeDeploy
-        uses: aws-actions/aws-codedeploy-deploy@v1
-        with:
-          application-name: movieverse
-          deployment-group-name: movieverse_deployment
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          aws deploy create-deployment \
+            --application-name movieverse \
+            --deployment-group-name movieverse_deployment \
+            --revision revisionType=GitHub,gitHubLocation={repository=my-repo,commitId=${GITHUB_SHA}} \
+            --description "Deploying new changes"
