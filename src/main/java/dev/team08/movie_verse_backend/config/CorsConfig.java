@@ -16,7 +16,7 @@ public class CorsConfig {
                 registry.addMapping("/**") // Allow all endpoints
                         .allowedOrigins("*") // Allow frontend origin
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH") // Allow HTTP methods
-                        .allowedHeaders("*") // Allow all headers
+                        .allowedHeaders("*") // Allow all headers;
                         .allowCredentials(true); // Allow credentials (e.g., cookies, authentication)
             }
         };

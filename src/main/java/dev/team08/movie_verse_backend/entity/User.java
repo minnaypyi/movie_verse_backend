@@ -3,6 +3,10 @@ package dev.team08.movie_verse_backend.entity;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "user")
@@ -30,10 +34,11 @@ public class User extends BaseEntity{
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Favorite> favorites;
-
+    
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WatchedMovie> watchedMovies;
-
+    
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "user_favorite_genre",
@@ -128,5 +133,18 @@ public class User extends BaseEntity{
 
     public void setWatchedMovies(List<WatchedMovie> watchedMovies) {
         this.watchedMovies = watchedMovies;
+    }
+    
+    //Custom Getters
+
+    // ✅ Custom getter to return favoriteGenres as a comma-separated string
+    @JsonProperty("favoriteGenresString")  // ✅ This will appear in JSON
+    public String getFavoriteGenresAsString() {
+        if (favoriteGenres == null || favoriteGenres.isEmpty()) {
+            return "";
+        }
+        return favoriteGenres.stream()
+                .map(Genre::getName)  // ✅ Extract genre name
+                .collect(Collectors.joining("/"));  // ✅ Join names with commas
     }
 }

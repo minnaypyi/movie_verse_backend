@@ -20,6 +20,11 @@ public class MovieReviewApiController {
 		this.userService = userService;
 	}
 	
+//	@GetMapping("/testReview")
+//	public ResponseEntity<String> testReview() {
+//		String response = movieReviewService.callPythonReviewSentimentApi("This is a testing review: So much issues with this movie");
+//		return ResponseEntity.ok(response);
+//	}
     @PostMapping("/{tmdb_movie_id}")
     public ResponseEntity<String> addOrUpdateReview(
             @RequestHeader("Authorization") String token,

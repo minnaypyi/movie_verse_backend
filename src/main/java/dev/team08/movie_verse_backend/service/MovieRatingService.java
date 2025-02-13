@@ -1,8 +1,15 @@
 package dev.team08.movie_verse_backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import dev.team08.movie_verse_backend.entity.Movie;
 import dev.team08.movie_verse_backend.entity.MovieRating;
@@ -14,7 +21,9 @@ import dev.team08.movie_verse_backend.repository.MovieRatingRepository;
 import dev.team08.movie_verse_backend.repository.UserRepository;
 import dev.team08.movie_verse_backend.interfaces.IMovieRatingService;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
