@@ -208,4 +208,17 @@ public class UserMovieInteractionService implements IUserMovieInteractionService
         return Collections.emptyList(); // 如果调用失败，返回空列表
     }
 
+    // MNP update
+    public List<Integer> getWatchedMovieIds(UUID userId) {
+        return userMovieInteractionRepository.findWatchedMovieIdsByUserId(userId, WatchStatus.WATCHED);
+    }
+
+    public void updateWatchStatus(UUID userId, Integer tmdbMovieId, WatchStatus watchStatus) {
+        UserMovieInteraction interaction = userMovieInteractionRepository.findByUserIdAndMovieId(userId, tmdbMovieId)
+                .orElseThrow(() -> new RuntimeException("Movie not found for user"));
+
+        interaction.setWatchStatus(watchStatus);
+        userMovieInteractionRepository.save(interaction);
+    }
+
 }

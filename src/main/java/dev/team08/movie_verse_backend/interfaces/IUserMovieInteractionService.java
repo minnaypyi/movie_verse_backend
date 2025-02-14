@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import dev.team08.movie_verse_backend.entity.UserMovieInteraction;
 import dev.team08.movie_verse_backend.enums.LikeStatus;
+import dev.team08.movie_verse_backend.enums.WatchStatus;
 
 public interface IUserMovieInteractionService {
     void logMovieView(UUID userId, Integer tmdbMovieId);
@@ -16,8 +17,13 @@ public interface IUserMovieInteractionService {
 	void toggleWatchlist(UUID userId, Integer tmdbMovieId);
 	void likeOrDislikeMovie(UUID userId, Integer tmdbMovieId, LikeStatus likeStatus);
 	void addOrUpdateReview(UUID userId, Integer tmdbMovieId, String reviewText, boolean isEdit);
+
 	List<UserMovieInteraction> getAllUserMovieInteractionsByUser(UUID userID);
 	List<Map<String, Object>> getUserInteractions(String token);
 	List<Map<String, Object>> callPythonRecommendApi(List<Map<String, Object>> userInteractions);
 	
+	// MNP update
+	List<Integer> getWatchedMovieIds(UUID userId);
+	void updateWatchStatus(UUID userId, Integer tmdbMovieId, WatchStatus watchStatus);
+
 }

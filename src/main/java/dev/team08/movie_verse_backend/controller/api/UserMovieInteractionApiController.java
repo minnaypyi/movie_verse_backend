@@ -2,6 +2,7 @@ package dev.team08.movie_verse_backend.controller.api;
 
 import dev.team08.movie_verse_backend.entity.UserMovieInteraction;
 import dev.team08.movie_verse_backend.enums.LikeStatus;
+import dev.team08.movie_verse_backend.enums.WatchStatus;
 import dev.team08.movie_verse_backend.interfaces.IUserMovieInteractionService;
 import dev.team08.movie_verse_backend.interfaces.IUserService;
 
@@ -9,8 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -108,4 +109,23 @@ public class UserMovieInteractionApiController {
     private UUID extractUserIdFromToken(String token) {
         return userService.getUserFromToken(token).getId();
     }
+
+    // MNP update
+    @GetMapping("/watched")
+    public ResponseEntity<List<Integer>> getWatchedMovieIds(@RequestHeader("Authorization") String token) {
+        UUID userId = extractUserIdFromToken(token);
+        List<Integer> watchedMovieIds = userMovieInteractionService.getWatchedMovieIds(userId);
+        return ResponseEntity.ok(watchedMovieIds);
+    }
+
+    @PutMapping("/unwatched/{tmdb_movie_id}")
+    public ResponseEntity<String> unmarkMovieAsWatched(
+            @RequestHeader("Authorization") String token,
+            @PathVariable Integer tmdb_movie_id) {
+
+        UUID userId = extractUserIdFromToken(token);
+        userMovieInteractionService.updateWatchStatus(userId, tmdb_movie_id, WatchStatus.NO_PLANS);
+        return ResponseEntity.ok("Movie removed from watched.");
+    }
+
 }
