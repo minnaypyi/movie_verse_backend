@@ -6,12 +6,16 @@ import dev.team08.movie_verse_backend.enums.WatchStatus;
 import dev.team08.movie_verse_backend.interfaces.IUserMovieInteractionService;
 import dev.team08.movie_verse_backend.interfaces.IUserService;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/user-interactions")
@@ -84,6 +88,25 @@ public class UserMovieInteractionApiController {
         UUID userId = extractUserIdFromToken(token);
         Optional<UserMovieInteraction> interaction = userMovieInteractionService.getUserMovieInteraction(userId, tmdb_movie_id);
         return ResponseEntity.ok(interaction);
+    }
+    
+    @GetMapping("/recommend")
+    public Object getUserInteractions(@RequestHeader("Authorization") String token){
+        try {
+            // 获取用户交互数据
+            List<Map<String, Object>> userInteractions = userMovieInteractionService.getUserInteractions(token);
+
+            // 调用 Python 推荐服务
+            List<String> recommendations = userMovieInteractionService.callPythonRecommendApi(userInteractions);
+            List<Integer> integerList = recommendations.stream()
+                    .map(obj -> Integer.parseInt(obj.toString())) // Convert Object → String → Integer
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(recommendations);
+        } catch (Exception e) {
+            // 捕获错误并返回 HTTP 500 响应
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonList(Map.of("error", e.getMessage())));
+        }
     }
 
     private UUID extractUserIdFromToken(String token) {

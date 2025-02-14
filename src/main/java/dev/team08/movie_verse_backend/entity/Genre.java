@@ -22,7 +22,8 @@ public class Genre extends BaseEntity{
     @JsonIgnore
     @ManyToMany(mappedBy = "genres")
     private List<Movie> movies;
-
+    
+    @JsonIgnore
     @ManyToMany(mappedBy = "favoriteGenres")
     private List<User> users;
 

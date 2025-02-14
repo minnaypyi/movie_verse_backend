@@ -7,8 +7,10 @@ import dev.team08.movie_verse_backend.entity.FavoriteCategory;
 import dev.team08.movie_verse_backend.entity.Genre;
 import dev.team08.movie_verse_backend.entity.Movie;
 import dev.team08.movie_verse_backend.entity.User;
+import dev.team08.movie_verse_backend.entity.UserMovieInteraction;
 import dev.team08.movie_verse_backend.enums.InteractionType;
 import dev.team08.movie_verse_backend.service.MovieService;
+import dev.team08.movie_verse_backend.service.UserMovieInteractionService;
 import dev.team08.movie_verse_backend.service.UserService;
 import dev.team08.movie_verse_backend.service.WatchedMovieService;
 import dev.team08.movie_verse_backend.utility.JwtUtility;
@@ -29,15 +31,13 @@ import org.springframework.http.ResponseEntity;
 public class MovieApiController {
     private final MovieService movieService;
 	private final UserService userService;
-    private final WatchedMovieService watchedMovieService;
-    private final JwtUtility jwtUtility;
+    private final UserMovieInteractionService userMovieInteractionService;
 
     @Autowired
-    public MovieApiController(MovieService movieService,  WatchedMovieService watchedMovieService, UserService userService, JwtUtility jwtUtility) {
+    public MovieApiController(MovieService movieService,  UserMovieInteractionService userMovieInteractionService, UserService userService) {
         this.userService = userService;
     	this.movieService = movieService;
-        this.watchedMovieService = watchedMovieService;
-        this.jwtUtility = jwtUtility;
+        this.userMovieInteractionService = userMovieInteractionService;
     }
 
 //    @GetMapping("/index")

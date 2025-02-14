@@ -2,9 +2,18 @@ package dev.team08.movie_verse_backend.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
+import dev.team08.movie_verse_backend.dto.request.MLReviewRequest;
+import dev.team08.movie_verse_backend.dto.response.MLReviewResponse;
 import dev.team08.movie_verse_backend.entity.Movie;
 import dev.team08.movie_verse_backend.entity.MovieReview;
 import dev.team08.movie_verse_backend.entity.User;
@@ -15,7 +24,9 @@ import dev.team08.movie_verse_backend.repository.MovieRepository;
 import dev.team08.movie_verse_backend.repository.UserRepository;
 import dev.team08.movie_verse_backend.interfaces.IMovieReviewService;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -59,6 +70,8 @@ public class MovieReviewService implements IMovieReviewService {
         } else {
             review.setOriginalReviewText(reviewText);
         }
+        
+        review.setReviewSentiment(callPythonReviewSentimentApi(reviewText));
 
         //movieReviewRepository.save(review);
         userMovieInteractionRepository.save(interaction);
@@ -94,6 +107,39 @@ public class MovieReviewService implements IMovieReviewService {
     public Optional<MovieReview> getUserReview(UUID userId, Integer tmdbMovieId) {
         return movieReviewRepository.findByUserIdAndTmdbMovieId(userId, tmdbMovieId);
     }
+    
+    @Override
+    public String callPythonReviewSentimentApi(String review) {
+    	  String pythonApiUrl = "http://127.0.0.1:5001/predict";
+    	  RestTemplate restTemplate = new RestTemplate();
+
+    	  try {
+    	      // 设置请求头
+    	      HttpHeaders headers = new HttpHeaders();
+    	      headers.setContentType(MediaType.APPLICATION_JSON);
+    	      MLReviewRequest request = new MLReviewRequest(review);
+
+    	      // 将交互数据转换为 JSON 格式
+    	      HttpEntity<MLReviewRequest> requestEntity = new HttpEntity<>(request, headers);
+
+    	      // 调用 Python API
+//    	      ResponseEntity<Map> response = restTemplate.exchange(
+//    	              pythonApiUrl,
+//    	              HttpMethod.POST,
+//    	              requestEntity,
+//    	              Map.class
+//    	      );
+    	        MLReviewResponse response = restTemplate.postForObject(pythonApiUrl, requestEntity, MLReviewResponse.class);
+
+    	      System.out.println("Sending data to Python API: " + review);
+    	      return response != null ? response.getResults() : "No results found";
+
+    	  } catch (Exception e) {
+    	      e.printStackTrace();
+
+    	      throw new RuntimeException("Failed to call Python API: " + e.getMessage());
+    	  }
+    	}
 
 //    public List<MovieReview> getAllReviews() {
 //        return movieReviewRepository.findAll();

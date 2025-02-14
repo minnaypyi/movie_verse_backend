@@ -20,4 +20,5 @@ public interface IMovieReviewService {
     void deleteReview(UUID userId, Integer tmdbMovieId);
     List<MovieReview> getReviewsByMovieId(Integer tmdbMovieId);
     Optional<MovieReview> getUserReview(UUID userId, Integer tmdbMovieId);
+    public String callPythonReviewSentimentApi(String review);
 }
