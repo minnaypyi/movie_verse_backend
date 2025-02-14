@@ -11,6 +11,8 @@ import dev.team08.movie_verse_backend.repository.UserRepository;
 import dev.team08.movie_verse_backend.interfaces.IUserMovieInteractionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -108,5 +110,18 @@ public class UserMovieInteractionService implements IUserMovieInteractionService
 	public Optional<UserMovieInteraction> getUserMovieInteraction(UUID userId, Integer tmdbMovieId) {
 		return userMovieInteractionRepository.findByUser_IdAndTmdbMovieId(userId,tmdbMovieId);
 	}
+
+    // MNP update
+    public List<Integer> getWatchedMovieIds(UUID userId) {
+        return userMovieInteractionRepository.findWatchedMovieIdsByUserId(userId, WatchStatus.WATCHED);
+    }
+
+    public void updateWatchStatus(UUID userId, Integer tmdbMovieId, WatchStatus watchStatus) {
+        UserMovieInteraction interaction = userMovieInteractionRepository.findByUserIdAndMovieId(userId, tmdbMovieId)
+                .orElseThrow(() -> new RuntimeException("Movie not found for user"));
+
+        interaction.setWatchStatus(watchStatus);
+        userMovieInteractionRepository.save(interaction);
+    }
 
 }
