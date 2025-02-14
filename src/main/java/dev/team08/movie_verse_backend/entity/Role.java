@@ -7,12 +7,14 @@ import jakarta.persistence.Table;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "roles")
 public class Role extends BaseEntity{
     @Column(nullable = false)
     private String name;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "role")
     private List<User> user;
 

@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/user-interactions")
@@ -96,8 +97,10 @@ public class UserMovieInteractionApiController {
             List<Map<String, Object>> userInteractions = userMovieInteractionService.getUserInteractions(token);
 
             // 调用 Python 推荐服务
-            List<Map<String, Object>> recommendations = userMovieInteractionService.callPythonRecommendApi(userInteractions);
-
+            List<String> recommendations = userMovieInteractionService.callPythonRecommendApi(userInteractions);
+            List<Integer> integerList = recommendations.stream()
+                    .map(obj -> Integer.parseInt(obj.toString())) // Convert Object → String → Integer
+                    .collect(Collectors.toList());
             return ResponseEntity.ok(recommendations);
         } catch (Exception e) {
             // 捕获错误并返回 HTTP 500 响应

@@ -173,7 +173,7 @@ public class UserMovieInteractionService implements IUserMovieInteractionService
     }
 
     @Override
-    public List<Map<String, Object>> callPythonRecommendApi(List<Map<String, Object>> userInteractions) {
+    public List<String> callPythonRecommendApi(List<Map<String, Object>> userInteractions) {
         String pythonApiUrl = "http://127.0.0.1:5000/recommend";
         RestTemplate restTemplate = new RestTemplate();
 
@@ -196,7 +196,7 @@ public class UserMovieInteractionService implements IUserMovieInteractionService
 
             // 解析返回结果
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-                return (List<Map<String, Object>>) response.getBody().get("recommendations");
+                return (List<String>) response.getBody().get("recommendations");
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -20,7 +20,7 @@ public interface IUserMovieInteractionService {
 
 	List<UserMovieInteraction> getAllUserMovieInteractionsByUser(UUID userID);
 	List<Map<String, Object>> getUserInteractions(String token);
-	List<Map<String, Object>> callPythonRecommendApi(List<Map<String, Object>> userInteractions);
+	List<String> callPythonRecommendApi(List<Map<String, Object>> userInteractions);
 	
 	// MNP update
 	List<Integer> getWatchedMovieIds(UUID userId);
