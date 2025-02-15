@@ -7,6 +7,7 @@ import dev.team08.movie_verse_backend.dto.request.UserProfileRequest;
 import dev.team08.movie_verse_backend.dto.response.AuthResponse;
 import dev.team08.movie_verse_backend.entity.User;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public interface IUserService {
@@ -28,4 +29,6 @@ public interface IUserService {
     UserProfileRequest getUserProfile(String token);
     boolean updatePassword(UUID userId, String currentPassword, String newPassword);
     //boolean loginAdmin(LoginAdminRequest loginAdminRequest);
+
+    Optional<User> findByUsernameAndEmail(String username, String email);
 }

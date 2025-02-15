@@ -390,9 +390,8 @@ public class UserService implements IUserService {
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-
             // Check if current password matches the stored one
-            if (currentPassword.equals(user.getPassword())) {
+            if (PasswordHashingUtility.verifyPassword(currentPassword, user.getPassword())) {
                 // Update the password if current password is correct
                 user.setPassword(newPassword);
                 userRepository.save(user);
@@ -401,6 +400,22 @@ public class UserService implements IUserService {
         }
 
         // If user not found or current password doesn't match
+        return false;
+    }
+
+    public Optional<User> findByUsernameAndEmail(String username, String email) {
+        // Query the database to find a user with matching username and email
+        return userRepository.findByUsernameAndEmail(username, email);
+    }
+
+    public boolean resetPassword(UUID userId, String newPassword) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setPassword(PasswordHashingUtility.hashPassword(newPassword));
+            userRepository.save(user);
+            return true;
+        }
         return false;
     }
 

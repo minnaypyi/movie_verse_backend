@@ -2,6 +2,7 @@ package dev.team08.movie_verse_backend.controller.api;
 
 import dev.team08.movie_verse_backend.dto.request.ChangePasswordRequest;
 import dev.team08.movie_verse_backend.dto.request.GenreRequest;
+import dev.team08.movie_verse_backend.dto.request.ResetPasswordRequest;
 import dev.team08.movie_verse_backend.entity.User;
 import dev.team08.movie_verse_backend.service.UserService;
 import dev.team08.movie_verse_backend.utility.PasswordHashingUtility;
@@ -14,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -82,6 +84,22 @@ public class UserApiController {
         }
 
     }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest request) {
+        Optional<User> userOptional = userService.findByUsernameAndEmail(request.getUsername(), request.getEmail());
+
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.status(400).body("Invalid request. Please verify first.");
+        }
+
+        // Update password
+        User user = userOptional.get();
+        userService.resetPassword(user.getId(), request.getNewPassword());
+
+        return ResponseEntity.ok("Password reset successfully.");
+    }
+
 
 //    @GetMapping("/user_interactions_table")
 //    public ResponseEntity<List<Map<String, Object>>> getUserInteractionsTable(@RequestHeader("Authorization") String token) {

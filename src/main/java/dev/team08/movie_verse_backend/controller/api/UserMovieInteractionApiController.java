@@ -157,4 +157,17 @@ public class UserMovieInteractionApiController {
         return ResponseEntity.ok(Map.of("count", favoriteMovieIds.size()));
     }
 
+    @GetMapping("/getuserinteractions")
+    public ResponseEntity<List<Map<String, Object>>> getAllUserInteractions(
+            @RequestHeader("Authorization") String token) {
+
+        // Fetch user interaction data from the service layer
+        List<Map<String, Object>> interactions = userMovieInteractionService.getUserInteractions(token);
+
+        if (interactions.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(interactions);
+    }
+
 }
