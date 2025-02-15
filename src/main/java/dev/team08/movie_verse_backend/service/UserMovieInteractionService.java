@@ -221,4 +221,7 @@ public class UserMovieInteractionService implements IUserMovieInteractionService
         userMovieInteractionRepository.save(interaction);
     }
 
+    public List<Integer> getFavoriteMovieIds(UUID userId) {
+        return userMovieInteractionRepository.findFavoriteMovieIdsByUserId(userId);
+    }
 }

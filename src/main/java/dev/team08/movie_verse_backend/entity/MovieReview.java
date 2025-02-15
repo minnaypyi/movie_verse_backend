@@ -2,6 +2,7 @@ package dev.team08.movie_verse_backend.entity;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.team08.movie_verse_backend.entity.ids.UserMovieInteractionId;
 import jakarta.persistence.*;
 
@@ -22,6 +23,7 @@ public class MovieReview extends CompEntity {
     
     @OneToOne
     @MapsId
+    @JsonIgnore
     @JoinColumns({
         @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
         @JoinColumn(name = "tmdb_movie_id", referencedColumnName = "tmdb_movie_id")

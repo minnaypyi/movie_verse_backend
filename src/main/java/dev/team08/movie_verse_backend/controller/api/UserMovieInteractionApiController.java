@@ -91,6 +91,8 @@ public class UserMovieInteractionApiController {
     }
     
     @GetMapping("/recommend")
+    //@CrossOrigin(origins = "http://localhost:3000")
+    //@RequestMapping(method = RequestMethod.OPTIONS, value = "/api/user-interactions/recommend")
     public Object getUserInteractions(@RequestHeader("Authorization") String token){
         try {
             // 获取用户交互数据
@@ -101,7 +103,7 @@ public class UserMovieInteractionApiController {
             List<Integer> integerList = recommendations.stream()
                     .map(obj -> Integer.parseInt(obj.toString())) // Convert Object → String → Integer
                     .collect(Collectors.toList());
-            return ResponseEntity.ok(recommendations);
+            return ResponseEntity.ok(integerList);
         } catch (Exception e) {
             // 捕获错误并返回 HTTP 500 响应
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -131,4 +133,10 @@ public class UserMovieInteractionApiController {
         return ResponseEntity.ok("Movie removed from watched.");
     }
 
+    @GetMapping("/favorites")
+    public ResponseEntity<List<Integer>> getFavoriteMovieIds(@RequestHeader("Authorization") String token) {
+        UUID userId = extractUserIdFromToken(token);
+        List<Integer> favoriteMovieIds = userMovieInteractionService.getFavoriteMovieIds(userId);
+        return ResponseEntity.ok(favoriteMovieIds);
+    }
 }

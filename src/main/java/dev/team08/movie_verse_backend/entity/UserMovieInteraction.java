@@ -2,6 +2,7 @@ package dev.team08.movie_verse_backend.entity;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.team08.movie_verse_backend.entity.ids.UserMovieInteractionId;
 import dev.team08.movie_verse_backend.enums.LikeStatus;
 import dev.team08.movie_verse_backend.enums.WatchStatus;
@@ -14,6 +15,7 @@ public class UserMovieInteraction extends CompEntity {
 	
     @Id
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -35,9 +37,11 @@ public class UserMovieInteraction extends CompEntity {
     @Column(name = "watch_status", nullable = false)
     private WatchStatus watchStatus = WatchStatus.NO_PLANS;
 
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "userInteraction")
     private MovieRating rating;
 
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "userInteraction")
     private MovieReview review;
 

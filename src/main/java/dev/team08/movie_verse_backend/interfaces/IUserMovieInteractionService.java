@@ -25,5 +25,5 @@ public interface IUserMovieInteractionService {
 	// MNP update
 	List<Integer> getWatchedMovieIds(UUID userId);
 	void updateWatchStatus(UUID userId, Integer tmdbMovieId, WatchStatus watchStatus);
-
+	List<Integer> getFavoriteMovieIds(UUID userId);
 }
