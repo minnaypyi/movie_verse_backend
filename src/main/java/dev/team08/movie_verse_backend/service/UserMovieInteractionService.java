@@ -11,6 +11,7 @@ import dev.team08.movie_verse_backend.repository.UserMovieInteractionRepository;
 import dev.team08.movie_verse_backend.repository.UserRepository;
 import dev.team08.movie_verse_backend.interfaces.IUserMovieInteractionService;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +33,8 @@ public class UserMovieInteractionService implements IUserMovieInteractionService
     private final MovieReviewRepository movieReviewRepository;
     private final UserRepository userRepository;
     private final UserService userService;
+    @Value("${ml.api.reccomend:http://127.0.0.1:5000}")
+    String recommendApiUrl;
 
     public UserMovieInteractionService(UserMovieInteractionRepository userMovieInteractionRepository, 
     		UserRepository userRepository, MovieReviewRepository movieReviewRepository, UserService userService
@@ -174,7 +177,7 @@ public class UserMovieInteractionService implements IUserMovieInteractionService
 
     @Override
     public List<String> callPythonRecommendApi(List<Map<String, Object>> userInteractions) {
-        String pythonApiUrl = "http://127.0.0.1:5000/recommend";
+        String pythonApiUrl = recommendApiUrl + "/recommend";
         RestTemplate restTemplate = new RestTemplate();
 
         try {

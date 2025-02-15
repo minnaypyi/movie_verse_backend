@@ -1,6 +1,8 @@
 package dev.team08.movie_verse_backend.config;
 
 import dev.team08.movie_verse_backend.filter.JwtAuthenticationFilter;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +13,9 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 public class FilterConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+ 
+    @Value("${cors.allowedOrigins:http://localhost:3000}")  // ✅ Load origins from properties
+    private String allowedOrigins;
 
     public FilterConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
@@ -28,7 +33,7 @@ public class FilterConfig {
     public FilterRegistrationBean<CorsFilter> corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedOrigin(allowedOrigins);
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 

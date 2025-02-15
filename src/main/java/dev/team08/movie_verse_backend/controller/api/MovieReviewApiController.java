@@ -20,9 +20,9 @@ public class MovieReviewApiController {
 		this.userService = userService;
 	}
 	
-//	@GetMapping("/testReview")
+	@GetMapping("/testReview/test")
 //	public ResponseEntity<String> testReview() {
-//		String response = movieReviewService.callPythonReviewSentimentApi("This is a testing review: So much issues with this movie");
+//		String response = movieReviewService.callPythonReviewSentimentApi("This is a testing review: This movie is amazing ");
 //		return ResponseEntity.ok(response);
 //	}
     @PostMapping("/{tmdb_movie_id}")

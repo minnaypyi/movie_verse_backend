@@ -2,6 +2,7 @@ package dev.team08.movie_verse_backend.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -42,6 +43,9 @@ public class MovieReviewService implements IMovieReviewService {
     private UserRepository userRepository;
     @Autowired
     private  UserMovieInteractionRepository userMovieInteractionRepository;
+    
+    @Value("${ml.api.sentiment:http://127.0.0.1:5001}")
+    String sentimentApiUrl;
     
     /**
      * ✅ Add a new review or update an existing one.
@@ -136,8 +140,7 @@ public class MovieReviewService implements IMovieReviewService {
 
     	  } catch (Exception e) {
     	      e.printStackTrace();
-
-    	      throw new RuntimeException("Failed to call Python API: " + e.getMessage());
+    	      return "Neutral";
     	  }
     	}
 
