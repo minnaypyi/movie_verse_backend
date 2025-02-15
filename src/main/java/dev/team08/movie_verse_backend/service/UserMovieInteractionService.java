@@ -184,7 +184,7 @@ public class UserMovieInteractionService implements IUserMovieInteractionService
 
             // 将交互数据转换为 JSON 格式
             HttpEntity<List<Map<String, Object>>> requestEntity = new HttpEntity<>(userInteractions, headers);
-
+            System.out.println(requestEntity);
             // 调用 Python API
             ResponseEntity<Map> response = restTemplate.exchange(
                     pythonApiUrl,

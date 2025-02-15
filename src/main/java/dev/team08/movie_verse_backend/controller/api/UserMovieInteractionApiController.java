@@ -104,6 +104,7 @@ public class UserMovieInteractionApiController {
                     .map(obj -> Integer.parseInt(obj.toString())) // Convert Object → String → Integer
                     .collect(Collectors.toList());
             return ResponseEntity.ok(integerList);
+
         } catch (Exception e) {
             // 捕获错误并返回 HTTP 500 响应
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -139,4 +140,21 @@ public class UserMovieInteractionApiController {
         List<Integer> favoriteMovieIds = userMovieInteractionService.getFavoriteMovieIds(userId);
         return ResponseEntity.ok(favoriteMovieIds);
     }
+
+    // Endpoint to get the count of watched movies
+    @GetMapping("/watched-count")
+    public ResponseEntity<Map<String, Integer>> getWatchedMoviesCount(@RequestHeader("Authorization") String token) {
+        UUID userId = extractUserIdFromToken(token);
+        List<Integer> watchedMovieIds = userMovieInteractionService.getWatchedMovieIds(userId);
+        return ResponseEntity.ok(Map.of("count", watchedMovieIds.size()));
+    }
+
+    // Endpoint to get the count of favorite movies
+    @GetMapping("/favorite-count")
+    public ResponseEntity<Map<String, Integer>> getFavoriteMoviesCount(@RequestHeader("Authorization") String token) {
+        UUID userId = extractUserIdFromToken(token);
+        List<Integer> favoriteMovieIds = userMovieInteractionService.getFavoriteMovieIds(userId);
+        return ResponseEntity.ok(Map.of("count", favoriteMovieIds.size()));
+    }
+
 }

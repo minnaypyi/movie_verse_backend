@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import dev.team08.movie_verse_backend.interfaces.IMovieReviewService;
 import dev.team08.movie_verse_backend.interfaces.IUserService;
 
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -73,5 +74,14 @@ public class MovieReviewApiController {
     private UUID extractUserIdFromToken(String token) {
         return userService.getUserFromToken(token).getId();
     }
-    
+
+    @GetMapping("/user/review-count")
+    public ResponseEntity<?> getReviewCountByUser(@RequestHeader("Authorization") String token) {
+        UUID userId = extractUserIdFromToken(token);
+        int reviewCount = movieReviewService.getReviewCountByUserId(userId);
+        System.out.println(reviewCount);
+        return ResponseEntity.ok(Map.of("reviewCount", reviewCount));
+    }
+
+
 }

@@ -198,5 +198,10 @@ public class MovieReviewService implements IMovieReviewService {
 //        movieReview.setLikes(movieReview.getLikes() + 1);
 //        movieReviewRepository.save(movieReview);
 //    }
+    public int getReviewCountByUserId(UUID userId) {
+        return movieReviewRepository.countByUserId(userId);
+    }
+
+
 }
 

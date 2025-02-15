@@ -26,5 +26,6 @@ public interface IUserService {
     AuthResponse loginAdmin(LoginUserRequest loginUserRequest);
 
     UserProfileRequest getUserProfile(String token);
+    boolean updatePassword(UUID userId, String currentPassword, String newPassword);
     //boolean loginAdmin(LoginAdminRequest loginAdminRequest);
 }

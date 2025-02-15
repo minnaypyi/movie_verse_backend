@@ -29,9 +29,10 @@ public class UserService implements IUserService {
     private final MovieRepository movieRepository;
     private final JwtUtility jwtUtility;
     private final RestTemplate restTemplate;
+    private final UserMapper userMapper;
 
     @Autowired
-    public UserService(UserRepository userRepository, MovieRatingRepository ratingRepository, RoleRepository roleRepository, GenreRepository genreRepository, MovieRepository movieRepository, JwtUtility jwtUtility, RestTemplate restTemplate) {
+    public UserService(UserMapper userMapper, UserRepository userRepository, MovieRatingRepository ratingRepository, RoleRepository roleRepository, GenreRepository genreRepository, MovieRepository movieRepository, JwtUtility jwtUtility, RestTemplate restTemplate) {
         this.userRepository = userRepository;
         this.ratingRepository = ratingRepository;
         this.roleRepository = roleRepository;
@@ -39,6 +40,7 @@ public class UserService implements IUserService {
         this.movieRepository = movieRepository;
         this.jwtUtility = jwtUtility;
         this.restTemplate = restTemplate;
+        this.userMapper = userMapper;
     }
 
     @PostConstruct
@@ -133,7 +135,7 @@ public class UserService implements IUserService {
         registerUserRequest.setPassword(PasswordHashingUtility.hashPassword(registerUserRequest.getPassword()));
 
         // Map the RegisterUserRequest to a User entity
-        User user = UserMapper.fromRegisterUserRequest(registerUserRequest);
+        User user = userMapper.fromRegisterUserRequest(registerUserRequest);
 
         // Fetch the role from the role service
         Role role = roleRepository.findByName("User");
@@ -177,7 +179,7 @@ public class UserService implements IUserService {
         registerAdminRequest.setPassword(PasswordHashingUtility.hashPassword(registerAdminRequest.getPassword()));
 
         // Map the RegisterUserRequest to a User entity
-        User user = UserMapper.fromRegisterAdminRequest(registerAdminRequest);
+        User user = userMapper.fromRegisterAdminRequest(registerAdminRequest);
 
         // Fetch the role from the role service
         Role role = roleRepository.findByName("Admin");
@@ -381,6 +383,25 @@ public class UserService implements IUserService {
 
         userRepository.save(user);
         return true;
+    }
+
+    public boolean updatePassword(UUID userId, String currentPassword, String newPassword) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            // Check if current password matches the stored one
+            if (currentPassword.equals(user.getPassword())) {
+                // Update the password if current password is correct
+                user.setPassword(newPassword);
+                userRepository.save(user);
+                return true;
+            }
+        }
+
+        // If user not found or current password doesn't match
+        return false;
     }
 
 }

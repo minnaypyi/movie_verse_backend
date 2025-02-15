@@ -1,16 +1,20 @@
 package dev.team08.movie_verse_backend.controller.api;
 
+import dev.team08.movie_verse_backend.dto.request.ChangePasswordRequest;
 import dev.team08.movie_verse_backend.dto.request.GenreRequest;
 import dev.team08.movie_verse_backend.entity.User;
 import dev.team08.movie_verse_backend.service.UserService;
+import dev.team08.movie_verse_backend.utility.PasswordHashingUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/users")
@@ -60,6 +64,23 @@ public class UserApiController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<String> changePassword(
+            @RequestHeader("Authorization") String token,
+            @RequestBody ChangePasswordRequest changePasswordRequest
+            ) {
+        UUID userId = userService.getUserFromToken(token).getId();
+        String currentPassword = changePasswordRequest.getCurrentPassword();
+        String newPassword = (PasswordHashingUtility.hashPassword(changePasswordRequest.getNewPassword()));
+        boolean isUpdated = userService.updatePassword(userId, currentPassword, newPassword);
+        if (isUpdated) {
+            return ResponseEntity.ok("Password updated successfully");
+        } else {
+            return ResponseEntity.status(400).body("Current password is incorrect");
+        }
+
     }
 
 //    @GetMapping("/user_interactions_table")
