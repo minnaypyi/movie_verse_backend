@@ -20,4 +20,6 @@ public interface MovieReviewRepository extends JpaRepository<MovieReview, UserMo
     @Query("SELECT mr FROM MovieReview mr WHERE mr.userInteraction.user.id = :userId AND mr.userInteraction.tmdbMovieId = :tmdbMovieId")
     Optional<MovieReview> findByUserIdAndTmdbMovieId(@Param("userId") UUID userId, @Param("tmdbMovieId") Integer tmdbMovieId);
     int countByUserId(UUID userId);
+    @Query("SELECT COUNT(mr) FROM MovieReview mr WHERE YEAR(mr.createdAt) = :year AND MONTH(mr.createdAt) = :month")
+    long countByCreatedAtYearAndMonth(int year, int month);
 }

@@ -202,6 +202,14 @@ public class MovieReviewService implements IMovieReviewService {
         return movieReviewRepository.countByUserId(userId);
     }
 
+    public long getTotalReviewCount() {
+        return movieReviewRepository.count();
+    }
+
+    // Method to get the total number of reviews for a specific year and month
+    public long getTotalReviewCountByMonth(int year, int month) {
+        return movieReviewRepository.countByCreatedAtYearAndMonth(year, month);
+    }
 
 }
 

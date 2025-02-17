@@ -1,13 +1,12 @@
 package dev.team08.movie_verse_backend.controller.api;
 
-import dev.team08.movie_verse_backend.dto.request.ForgotPasswordRequest;
-import dev.team08.movie_verse_backend.dto.request.LoginUserRequest;
-import dev.team08.movie_verse_backend.dto.request.RegisterUserRequest;
+import dev.team08.movie_verse_backend.dto.request.*;
 import dev.team08.movie_verse_backend.dto.response.AuthResponse;
 import dev.team08.movie_verse_backend.entity.User;
 import dev.team08.movie_verse_backend.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -57,5 +56,28 @@ public class AuthApiController {
         }
 
         return ResponseEntity.ok("User verified. Proceed to reset password.");
+    }
+
+    @PostMapping("/admin/register")
+    public ResponseEntity<String> registerAdmin(@RequestBody RegisterAdminRequest registerAdminRequest) {
+        boolean success = userService.registerAdmin(registerAdminRequest);
+        if (success) {
+            return ResponseEntity.status(HttpStatus.CREATED).body("Admin registered successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to register admin.");
+        }
+    }
+
+    // Admin login endpoint
+    @PostMapping("/admin/login")
+    public ResponseEntity<?> login(@RequestBody AdminLoginRequest loginRequest) {
+        AuthResponse authResponse = userService.loginAdmin(loginRequest);
+
+        if (authResponse == null) {
+            return ResponseEntity.status(401).build();
+
+        }
+        return ResponseEntity.ok(authResponse);
+
     }
 }

@@ -108,6 +108,10 @@ public class MovieRatingService implements IMovieRatingService {
         return movieRatingRepository.getAverageRatingByTmdbMovieId(tmdbMovieId).orElse(0.0);
     }
 
+    public long getTotalRatingCount() {
+        return movieRatingRepository.count();
+    }
+
 //    public List<MovieRating> getAllRatings() {
 //        return movieRatingRepository.findAll();
 //    }

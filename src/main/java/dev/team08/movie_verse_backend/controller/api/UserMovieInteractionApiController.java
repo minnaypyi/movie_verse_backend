@@ -170,4 +170,14 @@ public class UserMovieInteractionApiController {
         return ResponseEntity.ok(interactions);
     }
 
+    @GetMapping("/totalfavoritecount")
+    public Integer totalFavoriteCount() {
+        return userMovieInteractionService.getTotalFavoriteMovieCount();
+    }
+
+    @GetMapping("/totalwatchedcount")
+    public Integer totalwatchedCount() {
+        return userMovieInteractionService.getTotalWatchedMoviesCount();
+    }
+
 }

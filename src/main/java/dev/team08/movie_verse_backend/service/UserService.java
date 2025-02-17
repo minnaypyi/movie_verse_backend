@@ -211,25 +211,46 @@ public class UserService implements IUserService {
         return null;
     }
 
-    @Override
-    public AuthResponse loginAdmin(LoginUserRequest loginUserRequest) {
-        User user = userRepository.findByUsername(loginUserRequest.getUsername());
+//    @Override
+//    public AuthResponse loginAdmin(LoginUserRequest loginUserRequest) {
+//        User user = userRepository.findByUsername(loginUserRequest.getUsername());
+//
+//        if (Objects.equals(user.getRole().getName(), "Admin"))
+//        {
+//            // Check if the user exists and the password is correct
+//            if (PasswordHashingUtility.verifyPassword(loginUserRequest.getPassword(), user.getPassword())) {
+//                // Generate JSON Web Token
+//                String token = jwtUtility.generateToken(user.getUsername());
+//
+//                // Return the AuthResponse object with the token
+//                return new AuthResponse(token);
+//            }
+//        }
+//
+//        // Return null if the user does not exist or the password is incorrect
+//        return null;
+//    }
+@Override
+public AuthResponse loginAdmin(AdminLoginRequest adminLoginRequest) {
+    // Fetch user from the repository using the username from the AdminLoginRequest DTO
+    User user = userRepository.findByUsername(adminLoginRequest.getUsername());
 
-        if (Objects.equals(user.getRole().getName(), "Admin"))
-        {
-            // Check if the user exists and the password is correct
-            if (PasswordHashingUtility.verifyPassword(loginUserRequest.getPassword(), user.getPassword())) {
-                // Generate JSON Web Token
-                String token = jwtUtility.generateToken(user.getUsername());
+    // Check if the user exists and is an Admin
+    if (user != null && Objects.equals(user.getRole().getName(), "Admin")) {
+        // Verify the password using the PasswordHashingUtility
+        if (PasswordHashingUtility.verifyPassword(adminLoginRequest.getPassword(), user.getPassword())) {
+            // Generate JSON Web Token (JWT) for the user
+            String token = jwtUtility.generateToken(user.getUsername());
 
-                // Return the AuthResponse object with the token
-                return new AuthResponse(token);
-            }
+            // Return the AuthResponse object with the generated token
+            return new AuthResponse(token);
         }
-
-        // Return null if the user does not exist or the password is incorrect
-        return null;
     }
+
+    // Return null or throw exception if the user doesn't exist, or the password is incorrect
+    return null; // Optionally, you can throw a custom exception here for better error handling
+}
+
 
     @Override
     public UserProfileRequest getUserProfile(String token){
@@ -417,6 +438,11 @@ public class UserService implements IUserService {
             return true;
         }
         return false;
+    }
+
+    // Method to fetch the user count
+    public Long getUserCount() {
+        return userRepository.count(); // This returns the total number of users
     }
 
 }

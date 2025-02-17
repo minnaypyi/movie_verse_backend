@@ -22,6 +22,6 @@ public interface IMovieRatingService {
     void deleteRating(UUID userId, Integer tmdbMovieId);
     Optional<MovieRating> getUserRating(UUID userId, Integer tmdbMovieId);
     Double getAverageMovieRating(Integer tmdbMovieId);
-
+    long getTotalRatingCount();
 }
 

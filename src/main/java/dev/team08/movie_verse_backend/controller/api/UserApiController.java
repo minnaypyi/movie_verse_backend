@@ -106,4 +106,9 @@ public class UserApiController {
 //        return ResponseEntity.ok(userService.getUserInteractions(token));
 //    }
 
+    @GetMapping("/user-count")
+    public Long getUserCount() {
+        return userService.getUserCount();
+    }
+
 }

@@ -1,5 +1,6 @@
 package dev.team08.movie_verse_backend.controller;
 
+import dev.team08.movie_verse_backend.dto.request.AdminLoginRequest;
 import dev.team08.movie_verse_backend.dto.request.LoginUserRequest;
 import dev.team08.movie_verse_backend.dto.request.RegisterAdminRequest;
 import dev.team08.movie_verse_backend.dto.response.AuthResponse;
@@ -41,7 +42,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginUserRequest loginRequest) {
+    public ResponseEntity<AuthResponse> login(@RequestBody AdminLoginRequest loginRequest) {
         AuthResponse response = userService.loginAdmin(loginRequest);
         if (response == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);

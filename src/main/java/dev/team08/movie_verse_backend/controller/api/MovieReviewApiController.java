@@ -1,5 +1,6 @@
 package dev.team08.movie_verse_backend.controller.api;
 
+import dev.team08.movie_verse_backend.repository.MovieReviewRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,10 +16,12 @@ public class MovieReviewApiController {
 	
 	private final IMovieReviewService movieReviewService;
 	private final IUserService userService;
+
 	
 	public MovieReviewApiController (IMovieReviewService movieReviewService, IUserService userService) {
 		this.movieReviewService = movieReviewService;
 		this.userService = userService;
+
 	}
 	
 //	@GetMapping("/testReview")
@@ -83,5 +86,20 @@ public class MovieReviewApiController {
         return ResponseEntity.ok(Map.of("reviewCount", reviewCount));
     }
 
+    @GetMapping("/totalreviewcount")
+    public ResponseEntity<Long> getTotalReviewCount() {
+        long totalReviews = movieReviewService.getTotalReviewCount();
+        return ResponseEntity.ok(totalReviews);
+    }
+
+    // Endpoint to get the total number of reviews for a specific year and month
+    @GetMapping("/totalreviewcountbymonth")
+    public ResponseEntity<Long> getTotalReviewCount(
+            @RequestParam int year,
+            @RequestParam int month
+    ) {
+        long totalReviews = movieReviewService.getTotalReviewCountByMonth(year, month);
+        return ResponseEntity.ok(totalReviews);
+    }
 
 }

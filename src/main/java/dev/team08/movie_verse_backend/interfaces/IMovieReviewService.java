@@ -22,4 +22,6 @@ public interface IMovieReviewService {
     Optional<MovieReview> getUserReview(UUID userId, Integer tmdbMovieId);
     public String callPythonReviewSentimentApi(String review);
     int getReviewCountByUserId(UUID userId);
+    long getTotalReviewCount();
+    long getTotalReviewCountByMonth(int year, int month);
 }

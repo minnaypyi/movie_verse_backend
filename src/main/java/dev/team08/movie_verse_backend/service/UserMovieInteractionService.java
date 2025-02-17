@@ -224,4 +224,14 @@ public class UserMovieInteractionService implements IUserMovieInteractionService
     public List<Integer> getFavoriteMovieIds(UUID userId) {
         return userMovieInteractionRepository.findFavoriteMovieIdsByUserId(userId);
     }
+
+    public int getTotalFavoriteMovieCount() {
+        return userMovieInteractionRepository.countByFavoriteTrue();
+    }
+
+    public int getTotalWatchedMoviesCount() {
+        return userMovieInteractionRepository.countByWatchStatus(WatchStatus.WATCHED);
+    }
+
+
 }

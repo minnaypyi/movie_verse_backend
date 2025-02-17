@@ -31,4 +31,6 @@ public interface UserMovieInteractionRepository extends JpaRepository<UserMovieI
     @Query("SELECT m FROM UserMovieInteraction m WHERE m.user.id = :userId AND m.tmdbMovieId = :movieId")
     Optional<UserMovieInteraction> findByUserIdAndMovieId(@Param("userId") UUID userId, @Param("movieId") Integer movieId);
 
+    int countByFavoriteTrue();
+    int countByWatchStatus(WatchStatus watchStatus);
 }

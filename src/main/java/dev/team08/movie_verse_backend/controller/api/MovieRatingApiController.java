@@ -71,5 +71,10 @@ public class MovieRatingApiController {
     private UUID extractUserIdFromToken(String token) {
         return userService.getUserFromToken(token).getId();
     }
-    
+
+    @GetMapping("/totalratingcount")
+    public ResponseEntity<Long> getTotalRatingCount() {
+        long totalReviews = movieRatingService.getTotalRatingCount();
+        return ResponseEntity.ok(totalReviews);
+    }
 }
